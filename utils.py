@@ -48,7 +48,19 @@ def load(filepath):
 
 def get_audio_path(track_id):
     tid_str = '{:06d}'.format(track_id)
-    return os.path.join('data', 'fma_medium', tid_str[:3], tid_str + '.mp3')
+    return os.path.join('fma_medium', tid_str[:3], tid_str + '.mp3')
+
+def organize_tracks(path):
+    genres = ['Hip-Hop', 'Pop', 'Rock', 'Folk', 'Experimental', 'Jazz', 'Electronic', 'International', 'Soul-RnB', 'Blues', 'Spoken','Country', 'Classical', 'Old-Time / Historic', 'Instrumental', 'Easy Listening']
+    tracks = pd.read_csv(os.path.join('fma_metadata','train_labels.csv'))
+    tracksl = [(t,g) for t,g in zip(tracks['track_id'], tracks['genre'])]
+
+
+    for t in tracksl:
+        if t[1] == "Old-Time / Historic":
+            os.rename(get_audio_path(t[0]), os.path.join(path, "Old-Time", '{:06d}'.format(t[0]) + '.mp3'))
+        else:
+            os.rename(get_audio_path(t[0]), os.path.join(path, t[1], '{:06d}'.format(t[0]) + '.mp3'))
 
 
 # Faulty MP3 train files (https://github.com/mdeff/fma/issues/8).
